@@ -1,0 +1,6 @@
+image: skywaet/kuberdemo:v1
+replicas: 1
+secret:
+  name: load-secret
+  password: loadqwerty
+  

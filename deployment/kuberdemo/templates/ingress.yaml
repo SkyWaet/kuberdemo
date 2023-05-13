@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kuberdemo-ingress
+spec:
+  rules:
+    - host: kuberdemo.info
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: kuberdemo-service
+                port:
+                  number: 8090
