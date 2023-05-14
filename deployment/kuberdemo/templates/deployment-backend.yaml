@@ -27,6 +27,8 @@ spec:
                 envFrom:
                 - configMapRef:
                     name: kuberdemo-config
+                - secretRef:
+                    name: backend-secret
                 startupProbe:
                     httpGet:
                         path: /actuator/health/liveness
