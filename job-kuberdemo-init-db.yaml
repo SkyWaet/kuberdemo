@@ -1,0 +1,71 @@
+piVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    batch.kubernetes.io/job-tracking: ""
+    meta.helm.sh/release-name: kuberdemo-release
+    meta.helm.sh/release-namespace: kuberdemo
+  creationTimestamp: "2023-05-15T08:12:01Z"
+  generation: 1
+  labels:
+    app.kubernetes.io/managed-by: Helm
+  name: kuberdemo-init-db
+  namespace: kuberdemo
+  resourceVersion: "92048"
+  uid: e65ad83d-7884-4230-ad0b-62913ee038a0
+spec:
+  backoffLimit: 6
+  completionMode: NonIndexed
+  completions: 1
+  parallelism: 1
+  selector:
+    matchLabels:
+      controller-uid: e65ad83d-7884-4230-ad0b-62913ee038a0
+  suspend: false
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        controller-uid: e65ad83d-7884-4230-ad0b-62913ee038a0
+        job-name: kuberdemo-init-db
+    spec:
+      containers:
+      - command:
+        - sh
+        - -c
+        - cat /mnt/dbinit/db_init.sql
+        envFrom:
+        - configMapRef:
+            name: dbinit-config
+        - secretRef:
+            name: initdb-secret
+        image: governmentpaas/psql
+        imagePullPolicy: Always
+        name: initdb
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /mnt/dbinit
+          name: dbinit
+      dnsPolicy: ClusterFirst
+      restartPolicy: Never
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: dbinit-config-file
+        name: dbinit
+status:
+  completionTime: "2023-05-15T08:12:08Z"
+  conditions:
+  - lastProbeTime: "2023-05-15T08:12:08Z"
+    lastTransitionTime: "2023-05-15T08:12:08Z"
+    status: "True"
+    type: Complete
+  ready: 0
+  startTime: "2023-05-15T08:12:01Z"
+  succeeded: 1
+  uncountedTerminatedPods: {}

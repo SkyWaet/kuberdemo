@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{.Chart.Name}}-init-db
+spec:
+  template:
+    spec:
+      containers:
+      - name: initdb
+        image: governmentpaas/psql
+        command: ["sh","-c","psql -h postgres-service -U $POSTGRES_USER -d $POSTGRES_DB -a -f /mnt/dbinit/db_init.sql"]
+        envFrom:
+        - configMapRef:
+            name: dbinit-config
+        - secretRef:
+            name: initdb-secret
+        volumeMounts:
+          - mountPath: /mnt/dbinit
+            name: dbinit
+      restartPolicy: Never
+      volumes:
+        - name: dbinit
+          configMap:
+            name: dbinit-config-file
